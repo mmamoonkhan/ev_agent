@@ -1,0 +1,76 @@
+# ============================================================
+#   GreenEnergy — Smart EV Assistant
+#   Training Configuration File
+#   Edit this file to change any training settings
+# ============================================================
+
+# ── Base Model ───────────────────────────────────────────────
+# This is the pre-trained model we start from
+# LLaMA 3 8B is free, open-source, made by Meta
+model:
+  name: "meta-llama/Meta-Llama-3-8B-Instruct"
+  # How to load it in memory (4bit = uses less GPU RAM)
+  load_in_4bit: true
+  # Data type for calculations (saves GPU memory)
+  torch_dtype: "float16"
+
+# ── Data Paths ───────────────────────────────────────────────
+data:
+  # Where your processed training files are
+  train_file: "data/processed/train.json"
+  val_file:   "data/processed/val.json"
+  # Maximum length of each training example (in tokens)
+  # 1 token ≈ 0.75 words
+  max_length: 512
+
+# ── LoRA Settings ────────────────────────────────────────────
+# LoRA = Low Rank Adaptation
+# Instead of changing ALL model weights (expensive),
+# we add small trainable layers on top (cheap & fast)
+lora:
+  r: 16              # Size of the LoRA layers (higher = more capacity)
+  alpha: 32          # Scaling factor (usually 2x r)
+  dropout: 0.05      # Randomly disable neurons during training (prevents overfitting)
+  # Which parts of the model to fine-tune
+  target_modules:
+    - "q_proj"       # Query projection in attention
+    - "k_proj"       # Key projection in attention
+    - "v_proj"       # Value projection in attention
+    - "o_proj"       # Output projection in attention
+    - "gate_proj"    # Feed-forward gate
+    - "up_proj"      # Feed-forward up projection
+    - "down_proj"    # Feed-forward down projection
+
+# ── SFT Training Settings ────────────────────────────────────
+sft:
+  output_dir: "models/sft_model"     # Where to save the trained model
+  num_epochs: 3                       # How many times to go through all data
+  batch_size: 4                       # How many examples to train on at once
+  gradient_accumulation: 4            # Accumulate gradients (effective batch = 4x4 = 16)
+  learning_rate: 0.0002               # How fast the model learns (2e-4)
+  warmup_ratio: 0.03                  # Warm up learning rate for first 3% of steps
+  save_steps: 100                     # Save checkpoint every 100 steps
+  logging_steps: 10                   # Print progress every 10 steps
+  eval_steps: 100                     # Evaluate on validation set every 100 steps
+
+# ── DPO Training Settings ────────────────────────────────────
+dpo:
+  output_dir: "models/dpo_model"     # Where to save the DPO-refined model
+  num_epochs: 1                       # DPO needs fewer epochs than SFT
+  batch_size: 2                       # Smaller batch (DPO needs more memory)
+  gradient_accumulation: 8            # Effective batch = 2x8 = 16
+  learning_rate: 0.00005              # Lower learning rate for fine refinement (5e-5)
+  beta: 0.1                           # DPO temperature (controls how strongly it prefers chosen)
+  warmup_ratio: 0.1
+  save_steps: 50
+  logging_steps: 10
+  eval_steps: 50
+
+# ── Hardware Settings ─────────────────────────────────────────
+hardware:
+  # Set to true if supervisor's server has multiple GPUs
+  use_multi_gpu: false
+  # Saves memory by using gradient checkpointing
+  gradient_checkpointing: true
+  # Mixed precision training (faster on modern GPUs)
+  fp16: true
