@@ -1,10 +1,13 @@
 # GreenEnergy — Smart EV Assistant
+
 ### Master Thesis Project | ECE Paris | Ref #Mas25-R-1860
-**Author:** Muhammad Mamoon | **Supervisor:** Muhammad Farrukh Khan
+
+**Author:** Muhammad Mamoon Khan | **Supervisor:** Muhammad Farrukh Khan
 
 ---
 
 ## What this project does
+
 GreenEnergy is a fine-tuned LLM-based Agentic AI system that answers
 any question about Electric Vehicles — battery technology, charging
 infrastructure, vehicle specifications, grid optimization, costs,
@@ -14,6 +17,7 @@ research on Agentic AI systems orchestrated around LLMs.
 ---
 
 ## Project Structure
+
 ```
 ev_agent/
 │
@@ -59,17 +63,19 @@ ev_agent/
 ---
 
 ## Datasets Used
-| # | Dataset | Source | Samples Generated |
-|---|---------|--------|------------------|
-| 1 | EV Analytics | Kaggle | 29,994 |
-| 2 | EV Specs & Trends 2025 | Kaggle | 1,558 |
-| 3 | EV Charging Grid Optimization | Kaggle | 7,005 |
-| 4 | EV Specs 2025 | Hugging Face | 3,718 |
-| | **Total** | | **42,275** |
+
+| #   | Dataset                       | Source       | Samples Generated |
+| --- | ----------------------------- | ------------ | ----------------- |
+| 1   | EV Analytics                  | Kaggle       | 29,994            |
+| 2   | EV Specs & Trends 2025        | Kaggle       | 1,558             |
+| 3   | EV Charging Grid Optimization | Kaggle       | 7,005             |
+| 4   | EV Specs 2025                 | Hugging Face | 3,718             |
+|     | **Total**                     |              | **42,275**        |
 
 ---
 
 ## Training Strategy — DeepSeek-Inspired
+
 - **Base model:** LLaMA 3 8B (meta-llama/Meta-Llama-3-8B-Instruct)
 - **Stage A:** Supervised Fine-Tuning (SFT) — teaches EV domain knowledge
 - **Stage B:** Direct Preference Optimization (DPO) — improves answer quality
@@ -81,6 +87,7 @@ ev_agent/
 ## How to Run — Step by Step
 
 ### Step 1 — Install dependencies
+
 ```bash
 # On Mac (preprocessing only)
 pip install kaggle datasets huggingface_hub pandas numpy PyYAML tqdm requests
@@ -90,6 +97,7 @@ pip install -r requirements.txt
 ```
 
 ### Step 2 — Setup Kaggle API
+
 ```bash
 # Get token from kaggle.com → Account → API → Create New Token
 mkdir -p ~/.kaggle
@@ -98,23 +106,27 @@ chmod 600 ~/.kaggle/kaggle.json
 ```
 
 ### Step 3 — Download all 4 datasets
+
 ```bash
 python3 preprocessing/download_datasets.py
 ```
 
 ### Step 4 — Preprocess and combine datasets
+
 ```bash
 python3 preprocessing/preprocess.py
 # Output: 42,275 training samples in data/processed/
 ```
 
 ### Step 5 — Generate DPO preference pairs (Mac, no GPU needed)
+
 ```bash
 python3 training/generate_dpo_data.py
 # Output: 42,275 preference pairs in data/processed/
 ```
 
 ### Step 6 — SFT Training (GPU server required)
+
 ```bash
 python3 training/finetune_sft.py
 # Time: ~2-4 hours on A100 GPU
@@ -122,6 +134,7 @@ python3 training/finetune_sft.py
 ```
 
 ### Step 7 — DPO Training (GPU server required)
+
 ```bash
 python3 training/finetune_dpo.py
 # Time: ~1-2 hours on A100 GPU
@@ -129,6 +142,7 @@ python3 training/finetune_dpo.py
 ```
 
 ### Step 8 — Run the API (coming soon)
+
 ```bash
 uvicorn api.main:app --reload
 ```
@@ -136,25 +150,28 @@ uvicorn api.main:app --reload
 ---
 
 ## Training Configuration
+
 All settings are in `training/train_config.yaml`:
 
-| Setting | Value |
-|---|---|
-| Base model | meta-llama/Meta-Llama-3-8B-Instruct |
-| LoRA rank (r) | 16 |
-| LoRA alpha | 32 |
-| SFT epochs | 3 |
-| DPO epochs | 1 |
-| Quantization | 4-bit (QLoRA) |
-| Estimated GPU time | 4-6 hours on A100 |
+| Setting            | Value                               |
+| ------------------ | ----------------------------------- |
+| Base model         | meta-llama/Meta-Llama-3-8B-Instruct |
+| LoRA rank (r)      | 16                                  |
+| LoRA alpha         | 32                                  |
+| SFT epochs         | 3                                   |
+| DPO epochs         | 1                                   |
+| Quantization       | 4-bit (QLoRA)                       |
+| Estimated GPU time | 4-6 hours on A100                   |
 
 ---
 
 ## Thesis Connection
+
 This project directly demonstrates the thesis research question:
-> *"To what extent do Agentic AI systems, particularly those orchestrated
+
+> _"To what extent do Agentic AI systems, particularly those orchestrated
 > around LLMs, improve the autonomy, performance, and robustness of
-> intelligent agents in complex tasks?"*
+> intelligent agents in complex tasks?"_
 
 GreenEnergy is a live, working proof that fine-tuning + preference
 optimization significantly improves agent performance on domain-specific
@@ -163,5 +180,6 @@ tasks — the core argument of the thesis.
 ---
 
 ## Tech Stack
+
 Python • LLaMA 3 8B • LoRA/QLoRA • HuggingFace Transformers •
 TRL • PEFT • FastAPI • Kaggle API • SFT + DPO
