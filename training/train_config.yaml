@@ -8,7 +8,7 @@
 # This is the pre-trained model we start from
 # LLaMA 3 8B is free, open-source, made by Meta
 model:
-  name: "meta-llama/Meta-Llama-3-8B-Instruct"
+  name: "meta-llama/Llama-3.1-8B-Instruct"
   # How to load it in memory (4bit = uses less GPU RAM)
   load_in_4bit: true
   # Data type for calculations (saves GPU memory)
