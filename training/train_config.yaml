@@ -44,7 +44,7 @@ lora:
 # ── SFT Training Settings ────────────────────────────────────
 sft:
   output_dir: "models/sft_model"     # Where to save the trained model
-  num_epochs: 3                       # How many times to go through all data
+  num_epochs: 1                       # How many times to go through all data
   batch_size: 4                       # How many examples to train on at once
   gradient_accumulation: 4            # Accumulate gradients (effective batch = 4x4 = 16)
   learning_rate: 0.0002               # How fast the model learns (2e-4)
