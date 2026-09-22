@@ -1,40 +1,21 @@
-# ============================================================
-#   GreenEnergy — Smart EV Assistant
-#   Complete Requirements File
-#   Install with: pip install -r requirements.txt
-# ============================================================
+# GreenEnergy — Smart EV Assistant
+# Requirements for deployment
 
-# ── Data Downloading ─────────────────────────────────────────
-kaggle>=1.6.0              # Download datasets from Kaggle
-datasets>=2.14.0           # Download datasets from Hugging Face
-huggingface_hub>=0.20.0    # Connect to Hugging Face servers
+# API
+fastapi==0.104.0
+uvicorn==0.24.0
+pydantic==2.4.0
+python-multipart==0.0.6
 
-# ── Data Processing ──────────────────────────────────────────
-pandas>=2.0.0              # Read and clean CSV files
-numpy>=1.24.0              # Math operations on data
-PyYAML>=6.0.0              # Read the train_config.yaml file
+# AI Model
+torch==2.1.0
+transformers==4.36.0
+peft==0.7.0
+bitsandbytes==0.41.0
+accelerate==0.25.0
+sentencepiece==0.1.99
+scipy==1.11.0
 
-# ── Model Training ───────────────────────────────────────────
-torch>=2.1.0               # The core AI engine (by Meta/Facebook)
-transformers>=4.36.0       # Access LLaMA 3, Mistral and other models
-peft>=0.7.0                # LoRA fine-tuning (efficient training)
-trl>=0.7.0                 # SFT and DPO trainers
-bitsandbytes>=0.41.0       # 4-bit quantization (saves GPU memory)
-accelerate>=0.25.0         # Multi-GPU training support
-scipy>=1.11.0              # Required by some training utilities
-sentencepiece>=0.1.99      # Tokenizer for some models
-
-# ── Agent Layer ──────────────────────────────────────────────
-langchain>=0.1.0           # Agent framework and memory management
-langchain-community>=0.0.10 # LangChain community tools
-
-# ── API Backend ──────────────────────────────────────────────
-fastapi>=0.104.0           # Build the REST API
-uvicorn>=0.24.0            # Run the FastAPI server
-pydantic>=2.4.0            # Validate API request/response data
-python-multipart>=0.0.6    # Handle file uploads in API
-
-# ── Utilities ────────────────────────────────────────────────
-python-dotenv>=1.0.0       # Load secret keys from .env file
-tqdm>=4.66.0               # Show progress bars during training
-requests>=2.31.0           # Make HTTP requests
+# Utilities
+huggingface_hub==0.20.0
+python-dotenv==1.0.0
